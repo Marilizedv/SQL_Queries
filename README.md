@@ -1,5 +1,5 @@
 # SQL_Queries
-SQL queries for data analytics (used during studies at CareerFoundry)
+SQL queries I wrote for a data analytics (data immersion) course at CareerFoundry
 ### Description of Project
 **Imaginary Scenario:** _You’ve been hired as a data analyst by Rockbuster Stealth’s business intelligence (BI)
 department to help with the launch strategy for the new online video service. The BI
