@@ -1,6 +1,7 @@
-# SQL Queries I wrote to Join Tables
+SQL Queries I wrote to Join Tables
 
-## INNER JOIN to reveal Top 10 Countries
+INNER JOIN to reveal Top 10 Countries
+
 SELECT D.country,
 COUNT(customer_id) AS number_of_customers
 FROM customer A
