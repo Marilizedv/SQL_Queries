@@ -1,0 +1,49 @@
+These are Common Table Expressions I used to answer business questions for a data analytics project.
+
+CTE to find the average amount paid by the top 5 customers:
+
+WITH total_amount_cte (customer_id, first_name, Last_name, city, country, total_amount_paid) 
+AS (SELECT A.customer_id, A.first_name, A.last_name,
+    C.city, D.country,
+    SUM(amount) AS total_amount_paid
+    FROM customer A
+    INNER JOIN address B ON A.address_id = B.address_id
+    INNER JOIN city C ON B.city_id = C.city_id
+    INNER JOIN country D ON C.country_id = D.country_id
+    INNER JOIN payment E ON A.customer_id = E.customer_id
+    WHERE city IN('Aurora', 'Tokat', 'Tarsus', 'Atlixco', 'Emeishan', 'Pontianak', 
+			             'Shimoga', 'Aparecida de Goinia', 'Zalantun', 'Taguig')
+    GROUP BY A.customer_id, C.city, D.country
+    ORDER BY SUM(amount) DESC
+    LIMIT 5)
+SELECT AVG(total_amount_paid) AS average
+FROM total_amount_cte
+
+CTE to find out how many of the top 5 customers are based within each country:
+
+WITH top_five_cte (customer_id, first_name, last_name, city, country, total_amount_paid)
+AS (SELECT A.customer_id, A.first_name, A.last_name,
+    C.city, D.country,
+    SUM(amount) AS total_amount_paid
+    FROM customer A
+    INNER JOIN address B ON A.address_id = B.address_id
+    INNER JOIN city C ON B.city_id = C.city_id
+    INNER JOIN country D ON C.country_id = D.country_id
+    INNER JOIN payment E ON A.customer_id = E.customer_id
+    WHERE city IN('Aurora', 'Tokat', 'Tarsus', 'Atlixco', 'Emeishan', 'Pontianak', 
+			            'Shimoga', 'Aparecida de Goinia', 'Zalantun', 'Taguig')
+    GROUP BY A.customer_id, C.city, D.country
+    ORDER BY SUM(amount) DESC
+    LIMIT 5)
+SELECT country.country,
+COUNT(DISTINCT customer.customer_id) AS all_customer_count,
+COUNT(DISTINCT top_five_cte.customer_id) AS top_customer_count
+FROM country
+INNER JOIN city ON country.country_id = city.country_id
+INNER JOIN address ON city.city_id = address.city_id
+INNER JOIN customer ON address.address_id = customer.address_id
+LEFT JOIN top_five_cte ON country.country = top_five_cte.country
+GROUP BY country.country
+ORDER BY COUNT(DISTINCT top_five_cte.customer_id) DESC
+LIMIT 5
+
